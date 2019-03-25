@@ -1,7 +1,7 @@
 # coding=utf-8
 import face_recognition
 import glob, os, datetime, shutil
-
+import time
 
 class facerecognition_process:
     def __init__(self):
@@ -27,17 +27,23 @@ class facerecognition_process:
 
 
             at_least_one_true = False
+
+            index =0
+
             for picture in os.listdir(source_dir):
+                index+=1
+                t0 = time.time()
+                try:
 
-                # La commande ci-dessous ajoute la personne, si elle n'est pas connue à une liste de personnes inconnues
-                # list_of_unknown_face_encoding.append(face_recognition.face_encodings(face_recognition.load_image_file(file))[0])
+                    # La commande ci-dessous ajoute la personne, si elle n'est pas connue à une liste de personnes inconnues
+                    # list_of_unknown_face_encoding.append(face_recognition.face_encodings(face_recognition.load_image_file(file))[0])
 
-                # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
+                    # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
 
-                image = face_recognition.load_image_file(os.path.join(source_dir, picture))
-                face_locations = face_recognition.face_locations(image)
-
-                if (len(face_locations) > 0):
+                    image = face_recognition.load_image_file(os.path.join(source_dir, picture))
+                    # face_locations = face_recognition.face_locations(image)
+                    #
+                    # if (len(face_locations) > 0):
                     tolerance = 0.6
                     results = face_recognition.compare_faces(known_faces, face_recognition.face_encodings(image)[0], tolerance)
 
@@ -45,8 +51,14 @@ class facerecognition_process:
                         shutil.copy2(os.path.join(source_dir, picture), dest_dir)
                         at_least_one_true = True
 
-                else:
-                    print("No face was detected on this picture")
+                    # else:
+                    #     print("No face was detected on this picture")
+                except:
+                    pass
+
+                t1= time.time()
+                delta =(t1-t0)
+                print ("### image n°"+ str(index)+ " : "+str(delta)+" sec");
 
             if (at_least_one_true == True):
                 print("The candidate was observed at least on one picture")
