@@ -10,3 +10,5 @@ def get_images_from_arguments(arguments):
     # passing the arguments to the function
     response.download(arguments)
 
+
+

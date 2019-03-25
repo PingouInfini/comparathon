@@ -659,7 +659,8 @@ class googleimagesdownload:
                         #create metadata_directory is not exists
                         if not metadata_directory.endswith('/'):
                             metadata_directory += '/'
-                        os.makedirs(metadata_directory)
+                        if not os.path.exists(metadata_directory):
+                            os.makedirs(metadata_directory)
 
                         json_file = open(metadata_directory
                                          +search_keyword[i]+".json", "w")
