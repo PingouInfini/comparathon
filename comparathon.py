@@ -19,9 +19,8 @@ if __name__ == '__main__':
 
     #1 Get images from Google with username
     #t1 = time.time()
-    #d1 = (t1-t0)
     #print ("START 1st STEP " + str(d1))
-    my_args = {"keywords": user, "limit": 10,
+    my_args = {"keywords": user, "limit": 25,
                 "extract_metadata": True,
                 "output_directory": "mesimages",
                 "metadata_directory": "mesjson",
@@ -32,6 +31,7 @@ if __name__ == '__main__':
 
     #2 Filter the gotten pictures with Face Recognition
     #t2 = time.time()
+    #d1 = (t1-t0)
     #d2 = (t2-t1)
     #print("START 2nd STEP " + str(d2))
     ref_image_path = sys.argv[2]
