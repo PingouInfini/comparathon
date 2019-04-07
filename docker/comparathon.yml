@@ -1,0 +1,14 @@
+version: '3'
+services:
+  comparathon:
+    build:
+      context: ./context/
+    ports:
+    - "22:22"
+    environment:
+      COMPARATHON_NAME: COMPARATHON
+    networks:
+    - reach
+networks:
+  reach:
+    external: true
