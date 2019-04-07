@@ -32,7 +32,6 @@ class facerecognition_process:
 
             for picture in os.listdir(source_dir):
                 index+=1
-                t0 = time.time()
                 try:
 
                     # La commande ci-dessous ajoute la personne, si elle n'est pas connue à une liste de personnes inconnues
@@ -55,10 +54,6 @@ class facerecognition_process:
                     #     print("No face was detected on this picture")
                 except:
                     pass
-
-                t1= time.time()
-                delta =(t1-t0)
-                print ("### image n°"+ str(index)+ " : "+str(delta)+" sec");
 
             if (at_least_one_true == True):
                 print("The candidate was observed at least on one picture")
