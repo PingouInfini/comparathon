@@ -11,4 +11,3 @@ services:
     - reach
 networks:
   reach:
-    external: true

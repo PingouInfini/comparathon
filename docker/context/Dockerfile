@@ -8,15 +8,23 @@ RUN apt-get update && \
     #sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && \
 
 COPY sshd_config /etc/ssh/sshd_config
-COPY ../../requirements.txt ./
+COPY requirements.txt ./
 RUN mkdir /app
+COPY dockerdist/*.py /app/
+RUN mkdir /app/google
+COPY dockerdist/google /app/google
+RUN mkdir /app/face_reco
+COPY dockerdist/face_reco /app/face_reco
+RUN mkdir /app/extractor
+COPY dockerdist/extractor /app/extractor
+
 
 RUN apt-get update
 RUN apt-get install -y git
 RUN apt-get install -y vim
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get install -y python3.7
+RUN apt-get install -y python-pip
 RUN apt-get install -y curl
 RUN apt-get install -y unzip
 
