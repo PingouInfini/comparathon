@@ -17,7 +17,8 @@ RUN mkdir /app/face_reco
 COPY dockerdist/face_reco /app/face_reco
 RUN mkdir /app/extractor
 COPY dockerdist/extractor /app/extractor
-
+RUN mkdir /app/samples
+COPY dockerdist/samples /app/samples
 
 RUN apt-get update
 RUN apt-get install -y git
