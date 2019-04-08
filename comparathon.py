@@ -1,7 +1,6 @@
 import sys
 import google.googleimages as googleimages
 import face_reco.face_reco as face_reco
-import time
 import extractor.extractor as extractor
 
 def usage():
@@ -10,7 +9,6 @@ def usage():
 
 
 if __name__ == '__main__':
-    t0 = time.time()
     if len(sys.argv) != 3:
         usage()
         sys.exit(1)
@@ -36,6 +34,3 @@ if __name__ == '__main__':
     #3 Extract the filtered pictures associated urls
     json_path="mesjson/{}.json".format(user)
     extractor.json_parsing(json_path, user)
-
-
-
