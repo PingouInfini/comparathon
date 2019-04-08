@@ -1,4 +1,5 @@
-del ".\docker\context\dockerdist\*.py" /s /f /q
+del ".\docker\context\dockerdist\*" /s /f /q
+echo "" > README.md
 xcopy "requirements.txt" ".\docker\context\" /Y /F
 xcopy "*.py" ".\docker\context\dockerdist" /Y /F
 xcopy "google\*.*" ".\docker\context\dockerdist\google\" /Y /F
