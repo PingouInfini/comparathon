@@ -28,6 +28,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get install -y python3-pip
 RUN apt-get install -y curl
 RUN apt-get install -y unzip
+RUN apt-get install -y terminator
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
