@@ -1,13 +1,16 @@
 # Comparathon
 
+## FILE KAFKA
+### Producer : TO COMPLETE
+### Consumer : Attend dans la file Kafka : Nom ; Prenom ; Bytified picture ; BioId
+
 ## Prerequis
 Installation des libs nécessaires
 
     sudo apt-get -y install cmake
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
     
 ## Usage
-
 
     comparathon.py "<candidate>" "<path_to_94A_photo.jpg>"
 
@@ -20,7 +23,7 @@ A l'issue :
 - enregistrement des urls filtrées à la racine dans **Associated_Urls_to\<candidate\>.txt**
 
 
-## Install DLIB for python3 (Big pain in the axx)
+## Install DLIB for python3 (Seulement en cas de souci ci-dessus)
 
 [https://gist.github.com/ageitgey/629d75c1baac34dfa5ca2a1928a7aeaf]
 
