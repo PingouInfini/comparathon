@@ -1,5 +1,6 @@
-import custom_consumer
 import logging
+
+import custom_consumer
 import variables
 
 # Gestion du niveau de criticité des logs
