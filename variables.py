@@ -3,7 +3,7 @@ import os
 #Import des variables d'environnement de la brique dockerisée
 
 #Gestion des files Kafka
-KAFKA_URL = str(os.environ["KAFKA_URL"])
+KAFKA_URL = str(os.environ["KAFKA_IP"])
 KAFKA_PORT = str(os.environ["KAFKA_PORT"])
 TOPIC_TO_CONSUME = str(os.environ["TOPIC_TO_CONSUME"])
 TOPIC_TO_FILL_PICTURES = str(os.environ["TOPIC_TO_FILL_PICTURES"])
