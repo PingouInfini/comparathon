@@ -31,7 +31,8 @@ def main():
             {'idBio': '20696' ,'nom': 'Chirac', 'prenom': 'Jacques', 'theme': 'sport', 'motclef' : 'rugby', 'ponderation' : '3', 'extension' : 'jpeg',
              'urlsResults' : {'url' : 'https://www.nouvelobs.com/politique/20170710.OBS1881/les-presidents-et-le-sport-chirac-l-homme-qui-aimait-trop-le-sumo.html',
                               'listUrlImage' : ['https://media.nouvelobs.com/ext/uri/ureferentiel.nouvelobs.com/file/16156259.jpg', 'https://media.nouvelobs.com/referentiel/633x306/16149075.jpg', 'https://i.rugbyrama.fr/2017/06/25/2115412-44265450-2560-1440.jpg?w=1750', 'https://images.ladepeche.fr/api/v1/images/view/5c3755243e45462be86730ae/large/image.jpg' ],
-                              'frequence' : '23'}
+                              'frequence' : 23,
+                              'hit' : 0}
              }
         ]
         for i in range(len(tab)):

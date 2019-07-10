@@ -55,7 +55,7 @@ class vierundneunzig_Verbraucher(threading.Thread):
                 logging.info("Création du dossier racine du candidat")
                 os.makedirs(path_idBioDir)
 
-                ftp = FTP("10.0.75.1")
+                ftp = FTP("10.0.75.1") #TODO variabiliser
                 ftp.login("test", "test")
 
                 # if os.path.exists(path_to_person_image):

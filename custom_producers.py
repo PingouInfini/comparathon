@@ -39,9 +39,9 @@ def send_filtered_pictures(filtered_dir, bio_id):
 
 
 def send_rawdata(bio_id, msg, hit):
-
+    msg['urlsResults']['hit'] = hit
     try:
-        crazy_producer.send(topic_to_fill_hit, value=(bio_id, msg, hit))
+        crazy_producer.send(topic_to_fill_hit, value=(bio_id, msg))
         logging.info("Envoi des résultats dans la file kafka : " + topic_to_fill_hit)
 
     except Exception as e:
