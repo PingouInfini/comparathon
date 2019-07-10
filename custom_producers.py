@@ -12,7 +12,7 @@ kafka_url = variables.KAFKA_URL
 
 topic_to_fill_pictures = variables.TOPIC_TO_FILL_PICTURES
 topic_to_fill_urls = variables.TOPIC_TO_FILL_URLS
-
+topic_to_fill_hit = variables.TOPIC_TO_FILL_HIT
 # assemblage de l'adresse de Kafka
 kafka_endpoint = kafka_url + ":" + kafka_port
 
@@ -36,6 +36,16 @@ def send_filtered_pictures(filtered_dir, bio_id):
 
         except Exception as e:
             logging.error(e)
+
+
+def send_rawdata(bio_id, msg, hit):
+
+    try:
+        crazy_producer.send(topic_to_fill_hit, value=(bio_id, msg, hit))
+        logging.info("Envoi des résultats dans la file kafka : " + topic_to_fill_hit)
+
+    except Exception as e:
+        logging.error(e)
 
 
 def send_source_urls(urls_list, bio_id):

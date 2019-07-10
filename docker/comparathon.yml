@@ -13,5 +13,6 @@ services:
       TOPIC_TO_FILL_PICTURES : ggimgToColissi
       TOPIC_TO_CONSUME : housToCompara
       TOPIC_TO_FILL_URLS : urlToScrapy
+      TOPIC_TO_FILL_HIT : comparaToColissi
       KAFKA_IP : "${ipkafka}"
       KAFKA_PORT : 8092

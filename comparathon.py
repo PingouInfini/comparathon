@@ -2,6 +2,8 @@ import json
 import logging
 import os
 import shutil
+from io import BytesIO
+from ftplib import FTP
 
 import face_recognition
 
@@ -11,46 +13,42 @@ import custom_producers
 
 
 # Méthode centrale qui lance les méthodes de comparaison des images et d'extraction des URL, puis celles d'envoi dans les files Kafka
-def get_relative_images_and_url(person_names, path_to_person_image, path_to_person_dir, pic_number, bio_id):
-    filtered_dir = path_to_person_dir + "/filtered_pictures"
-    potential_pic_dir = path_to_person_dir + "/potential_pics"
-    json_path = path_to_person_dir + "/{}.json".format(person_names)
-    urls_list = path_to_person_dir + "/source_urls_{}.txt".format(person_names)
+# à chaque msg kafka reçu
+def get_relative_images_and_url(path_to_person_image, path_to_person_dir, msg):
 
-    # Création des dossiers qui contiendront les images téléchargées, les images validées et le json des urls
-    if os.path.isdir(filtered_dir) == False:
+    idBio = msg['idBio']
+
+    filtered_dir = path_to_person_dir + "/filtered_pictures"
+    source_dir = path_to_person_dir + "/potential_pics"
+    json_path = path_to_person_dir + "/{}.json".format(idBio)
+    urls_list = path_to_person_dir + "/source_urls_{}.txt".format(idBio)
+
+
+
+    # Création des dossiers qui contiendront les images validées
+    if not os.path.isdir(filtered_dir):
         os.mkdir(filtered_dir)
         logging.info("création du dossier des images filtrées")
-    if os.path.isdir(potential_pic_dir) == False:
-        os.mkdir(potential_pic_dir)
-        logging.info("création du dossier des images à trier")
 
-    # Récupération des images depuis Google avec les nom + prénom, enregistrement dans dossier
-    my_args = {"keywords": person_names, "limit": pic_number,
-               "extract_metadata": True,
-               "output_directory": potential_pic_dir,
-               "metadata_directory": path_to_person_dir,
-               "type": "photo"
-               }
 
-    googleimages.get_images_from_arguments(my_args)
+    hit = fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filtered_dir)
 
-    # Filtre des images depuis le dossier rempli ci-dessus
-    source_dir = potential_pic_dir + "/" + person_names
-    fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filtered_dir)
+    #extract_urls_from_json(json_path, filtered_dir, urls_list)
 
-    # Extraction des urls associées aux images validées
-    extract_urls_from_json(json_path, filtered_dir, urls_list)
 
-    # Envoi des images dans la file Kafka
-    custom_producers.send_filtered_pictures(filtered_dir, bio_id)
 
-    # Envoi des url sources des images sélectionnées dans la file Kafka
-    custom_producers.send_source_urls(urls_list, bio_id)
+    custom_producers.send_filtered_pictures(filtered_dir, idBio)
+
+    #renvoie le nombre de hit(filtered_picture) pour cette url
+    custom_producers.send_rawdata(idBio, msg, hit)
+
+    #custom_producers.send_source_urls(urls_list, idBio)
 
 
 # Parcours le dossier des images téléchargées et enregistre dans un dossier les images filtrées validées
 def fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filtered_dir):
+    hit = 0
+
     try:
         # Chemin de l'image de référence et préparation
         ref_image = face_recognition.load_image_file(path_to_person_image)
@@ -78,13 +76,14 @@ def fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filte
                 if results[0] == True:
                     shutil.copy2(os.path.join(source_dir, picture), filtered_dir)
                     logging.info("Candidat reconnu sur l'image. Sauvegarde de l'image dans " + filtered_dir)
+                    hit += 1
 
             except Exception as e:
                 logging.error(e)
 
     except IndexError:
         print("I wasn't able to locate any faces in at least one of the images. Check the image files. Aborting...")
-
+    return hit
 
 def extract_urls_from_json(json_path, filtered_dir, urls_list):
     try:
