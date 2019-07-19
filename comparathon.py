@@ -16,33 +16,28 @@ import custom_producers
 # à chaque msg kafka reçu
 def get_relative_images_and_url(path_to_person_image, path_to_person_dir, msg):
 
-    idBio = msg['idBio']
+    idBio = msg['biographics'].get('idBio')
 
     filtered_dir = path_to_person_dir + "/filtered_pictures"
     source_dir = path_to_person_dir + "/potential_pics"
     json_path = path_to_person_dir + "/{}.json".format(idBio)
     urls_list = path_to_person_dir + "/source_urls_{}.txt".format(idBio)
 
-
-
     # Création des dossiers qui contiendront les images validées
     if not os.path.isdir(filtered_dir):
         os.mkdir(filtered_dir)
         logging.info("création du dossier des images filtrées")
 
-
     hit = fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filtered_dir)
 
-    #extract_urls_from_json(json_path, filtered_dir, urls_list)
-
-
+    # extract_urls_from_json(json_path, filtered_dir, urls_list)
 
     custom_producers.send_filtered_pictures(filtered_dir, idBio)
 
-    #renvoie le nombre de hit(filtered_picture) pour cette url
+    # renvoie le nombre de hit(filtered_picture) pour cette url
     custom_producers.send_rawdata(idBio, msg, hit)
 
-    #custom_producers.send_source_urls(urls_list, idBio)
+    # custom_producers.send_source_urls(urls_list, idBio)
 
 
 # Parcours le dossier des images téléchargées et enregistre dans un dossier les images filtrées validées

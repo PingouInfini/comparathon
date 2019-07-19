@@ -40,23 +40,26 @@ class vierundneunzig_Verbraucher(threading.Thread):
             msg = msg.value
             logging.info("## Trying to eat first kafka data ##")
 
-            idBio = msg['idBio']
-            extension = msg['extension']
-            urlsResults = msg['urlsResults']
-            listUrlImage = urlsResults.get('listUrlImage')
+            idBio = msg['biographics'].get('idBio')
+            extension = 'jpeg'
+            listUrlImage = msg['urlsResults'].get('listUrlImage')
             img_name = idBio+"."+extension
 
             logging.info("## Consume data associated to bio_Id n° : " + str(idBio) + " ##")
 
             path_idBioDir = os.getcwd() + "/results/" + "{}".format(idBio)
-            path_to_person_image = path_idBioDir +"/"+ img_name
+            path_to_person_image = path_idBioDir + "/" + img_name
 
             if not (os.path.isdir(path_idBioDir)):
                 logging.info("Création du dossier racine du candidat")
                 os.makedirs(path_idBioDir)
 
-                ftp = FTP("10.0.75.1") #TODO variabiliser
-                ftp.login("test", "test")
+                # ftp = FTP(os.environ['FTP_ADDR'])
+                # ftp.login(os.environ['FTP_ID'], os.environ['FTP_PASSWORD'])
+                # ftp.cwd(os.environ['FTP_PATH'])
+                ftp = FTP("192.168.0.10")
+                ftp.login("nimir", "@soleil1")
+                ftp.cwd("dev/ftp")
 
                 # if os.path.exists(path_to_person_image):
                 #     logging.info("suppression de la photo pre-existante")
@@ -64,16 +67,14 @@ class vierundneunzig_Verbraucher(threading.Thread):
                 os.chdir(os.getcwd() + "/results/"+idBio)
                 ftp.nlst()
                 ftp.retrbinary('RETR '+img_name, open(img_name, 'wb').write)
-            else :
+            else:
                 os.chdir(os.getcwd() + "/results/"+idBio)
-
 
             path_source_dir = path_idBioDir + "/potential_pics"
             if not (os.path.isdir(path_source_dir)):
                 logging.info("Creating source directory")
                 os.makedirs(path_source_dir)
             os.chdir(path_source_dir)
-
 
             logging.info("création de la photo du candidat:  " + str(path_to_person_image))
 
@@ -86,6 +87,7 @@ class vierundneunzig_Verbraucher(threading.Thread):
 
         consumer.close()
         logging.info("Fermeture du consumer")
+
 
 def get_media_url(imageFileName, media):
     logging.debug("getting media url...")

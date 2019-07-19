@@ -39,8 +39,9 @@ def send_filtered_pictures(filtered_dir, bio_id):
 
 
 def send_rawdata(bio_id, msg, hit):
-    msg['urlsResults']['hit'] = hit
+    msg['urlsResults']['imageHit'] = hit
     try:
+        # check si le rawdata existe, créer ou mettre à jour envoyer à Coli le rawdata
         crazy_producer.send(topic_to_fill_hit, value=(bio_id, msg))
         logging.info("Envoi des résultats dans la file kafka : " + topic_to_fill_hit)
 
