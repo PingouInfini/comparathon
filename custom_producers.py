@@ -1,6 +1,7 @@
 import base64
 import logging
 import os
+import uuid
 from json import dumps
 
 from kafka import KafkaProducer
@@ -19,7 +20,7 @@ kafka_endpoint = kafka_url + ":" + kafka_port
 crazy_producer = KafkaProducer(bootstrap_servers=[kafka_endpoint], value_serializer=lambda x: dumps(x).encode('utf-8'))
 
 
-def send_filtered_pictures(filtered_dir, bio_id):
+def send_filtered_pictures(filtered_dir, bio_id, rawdata_url_name):
     for file in os.listdir(filtered_dir):
         fname, fext = os.path.splitext(file)
         file_type_point = "image/" + str(fext).replace(".", "")
@@ -31,22 +32,25 @@ def send_filtered_pictures(filtered_dir, bio_id):
                 'image': image
             }
 
-            crazy_producer.send(topic_to_fill_pictures, value=(picture, bio_id))
+            crazy_producer.send(topic_to_fill_pictures, value=(picture, bio_id, rawdata_url_name))
             logging.info("Envoi de l'image < " + fname + " > dans la file Kafka : " + topic_to_fill_pictures)
 
         except Exception as e:
             logging.error(e)
 
 
-def send_rawdata(bio_id, msg, hit):
-    msg['urlsResults']['imageHit'] = hit
-    try:
-        # check si le rawdata existe, créer ou mettre à jour envoyer à Coli le rawdata
-        crazy_producer.send(topic_to_fill_hit, value=(bio_id, msg))
-        logging.info("Envoi des résultats dans la file kafka : " + topic_to_fill_hit)
+def send_rawdata(bio_id, msg):
 
+    rawdata_url_name = str(uuid.uuid4())
+
+    try:
+        # check si le rawdata existe, créer ou mettre à jour envoyer à Coli le rawdata (comparaToColissi)
+        crazy_producer.send(topic_to_fill_hit, value=(bio_id, rawdata_url_name, msg))
+        logging.info("Envoi des urls dans la file kafka à Coli: " + topic_to_fill_hit)
     except Exception as e:
         logging.error(e)
+
+    return rawdata_url_name
 
 
 def send_source_urls(urls_list, bio_id):

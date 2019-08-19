@@ -2,12 +2,9 @@ import json
 import logging
 import os
 import shutil
-from io import BytesIO
-from ftplib import FTP
 
 import face_recognition
 
-import google.googleimages as googleimages
 from variables import TOLERANCE as tolerance
 import custom_producers
 
@@ -29,15 +26,13 @@ def get_relative_images_and_url(path_to_person_image, path_to_person_dir, msg):
         logging.info("création du dossier des images filtrées")
 
     hit = fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filtered_dir)
-
+    msg['urlsResults']['imageHit'] = hit
     # extract_urls_from_json(json_path, filtered_dir, urls_list)
 
-    custom_producers.send_filtered_pictures(filtered_dir, idBio)
-
     # renvoie le nombre de hit(filtered_picture) pour cette url
-    custom_producers.send_rawdata(idBio, msg, hit)
+    rawdata_url_name = custom_producers.send_rawdata(idBio, msg)
 
-    # custom_producers.send_source_urls(urls_list, idBio)
+    custom_producers.send_filtered_pictures(filtered_dir, idBio, rawdata_url_name)
 
 
 # Parcours le dossier des images téléchargées et enregistre dans un dossier les images filtrées validées
@@ -68,17 +63,18 @@ def fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filte
                 results = face_recognition.compare_faces(known_faces, face_recognition.face_encodings(image)[0],
                                                          float(tolerance))
 
-                if results[0] == True:
+                if results[0]:
                     shutil.copy2(os.path.join(source_dir, picture), filtered_dir)
                     logging.info("Candidat reconnu sur l'image. Sauvegarde de l'image dans " + filtered_dir)
                     hit += 1
 
             except Exception as e:
-                logging.error(e)
+                logging.error(e)  # la plupart du temps pas de visage reconnu
 
     except IndexError:
         print("I wasn't able to locate any faces in at least one of the images. Check the image files. Aborting...")
     return hit
+
 
 def extract_urls_from_json(json_path, filtered_dir, urls_list):
     try:

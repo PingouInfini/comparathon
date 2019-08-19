@@ -1,4 +1,4 @@
-import base64
+
 import json
 import logging
 import os
@@ -6,7 +6,6 @@ import threading
 import requests
 from ftplib import FTP
 import re
-from urllib.parse import urlparse
 import uuid
 
 from kafka import KafkaConsumer
@@ -34,6 +33,7 @@ class vierundneunzig_Verbraucher(threading.Thread):
         consumer.subscribe(topic_to_consume)
         logging.info("Consume datas from topic :" + str(topic_to_consume))
         logging.info("CONSUMER : waiting for data")
+        home_path = os.getcwd()
 
         # Consommation du topic
         for msg in consumer:
@@ -57,7 +57,7 @@ class vierundneunzig_Verbraucher(threading.Thread):
                 # ftp = FTP(os.environ['FTP_ADDR'])
                 # ftp.login(os.environ['FTP_ID'], os.environ['FTP_PASSWORD'])
                 # ftp.cwd(os.environ['FTP_PATH'])
-                ftp = FTP("192.168.0.10")
+                ftp = FTP("192.168.0.9")
                 ftp.login("nimir", "@soleil1")
                 ftp.cwd("dev/ftp")
 
@@ -79,31 +79,41 @@ class vierundneunzig_Verbraucher(threading.Thread):
             logging.info("création de la photo du candidat:  " + str(path_to_person_image))
 
             for urlImage in listUrlImage:
-                imageFileName = str(uuid.uuid4())+ "." + extension
-                get_media_url(imageFileName, urlImage)
+                try:
+                    extension = re.search("\.[0-9A-Za-z]+$", urlImage).group(0)
+                    imageFileName = str(uuid.uuid4()) + extension
+                    get_media_url(imageFileName, urlImage)
+                except Exception as e:
+                    logging.error(e)
 
             # Appel de la fonction qui télécharge des images depuis Google et les compare à la photo de la personne
             comparathon.get_relative_images_and_url (path_to_person_image, path_idBioDir, msg)
-
+            os.chdir(home_path)
         consumer.close()
         logging.info("Fermeture du consumer")
 
 
 def get_media_url(imageFileName, media):
     logging.debug("getting media url...")
+    url = re.compile("^((http|https):\/\/|(www\.|ftp\.))")
+    if not url.search(media):
+        media = "http://" + media
     with open(str(imageFileName), 'wb') as handle:
+        try:
+            response = requests.get(media, stream=True)
 
-        response = requests.get(media, stream=True)
+            if not response.ok:
+                logging.error(response)
 
-        if not response.ok:
-            logging.error(response)
+            else:
+                for block in response.iter_content(1024):
+                    if not block:
+                        break
 
-        else:
-            for block in response.iter_content(1024):
-                if not block:
-                    break
+                    handle.write(block)
+        except Exception as e:
+            logging.error(e)
 
-                handle.write(block)
 
 """
 Tests if the source directory doesn't contain a json or an image (except processedData directory)

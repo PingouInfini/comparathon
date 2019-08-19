@@ -10,7 +10,7 @@ import os
 # TOPIC_TO_FILL_URLS = str(os.environ["TOPIC_TO_FILL_URLS"])
 # TOPIC_TO_FILL_HIT = str(os.environ["TOPIC_TO_FILL_HIT"])
 
-KAFKA_URL = '192.168.0.10'
+KAFKA_URL = '192.168.0.9'
 KAFKA_PORT = '8092'
 TOPIC_TO_CONSUME = 'scrapyToCompara'
 TOPIC_TO_FILL_PICTURES = 'ggimgToColissi'
