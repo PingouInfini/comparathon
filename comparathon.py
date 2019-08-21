@@ -4,6 +4,7 @@ import os
 import shutil
 
 import face_recognition
+import time
 
 from variables import TOLERANCE as tolerance
 import custom_producers
@@ -31,8 +32,10 @@ def get_relative_images_and_url(path_to_person_image, path_to_person_dir, msg):
 
     # renvoie le nombre de hit(filtered_picture) pour cette url
     rawdata_url_name = custom_producers.send_rawdata(idBio, msg)
-
+    time.sleep(5)
     custom_producers.send_filtered_pictures(filtered_dir, idBio, rawdata_url_name)
+    shutil.rmtree(filtered_dir)
+    shutil.rmtree(source_dir)
 
 
 # Parcours le dossier des images téléchargées et enregistre dans un dossier les images filtrées validées
