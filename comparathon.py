@@ -10,8 +10,8 @@ from variables import TOLERANCE as tolerance
 import custom_producers
 
 
-# Méthode centrale qui lance les méthodes de comparaison des images et d'extraction des URL, puis celles d'envoi dans les files Kafka
-# à chaque msg kafka reçu
+# Méthode centrale qui lance les méthodes de comparaison des images et d'extraction des URL, puis celles d'envoi dans
+# les files Kafka à chaque msg kafka reçu
 def get_relative_images_and_url(path_to_person_image, path_to_person_dir, msg):
 
     idBio = msg['biographics'].get('idBio')
@@ -28,12 +28,17 @@ def get_relative_images_and_url(path_to_person_image, path_to_person_dir, msg):
 
     hit = fill_results_dir_with_valid_pictures(path_to_person_image, source_dir, filtered_dir)
     msg['urlsResults']['imageHit'] = hit
+    del msg['urlsResults']['listUrlImage']
+    if hit != 0:
+        ## Scoring
+        msg['urlsResults']['points'] = msg['urlsResults']['points']*12
     # extract_urls_from_json(json_path, filtered_dir, urls_list)
 
     # renvoie le nombre de hit(filtered_picture) pour cette url
-    rawdata_url_name = custom_producers.send_rawdata(idBio, msg)
-    time.sleep(5)
-    custom_producers.send_filtered_pictures(filtered_dir, idBio, rawdata_url_name)
+
+    rawdata_url_name = custom_producers.send_rawdata(idBio, msg)  # TODO modif list url (que url qui a hit)
+    time.sleep(5)  # TODO à corriger
+    custom_producers.send_filtered_pictures(filtered_dir, idBio, rawdata_url_name)  # TODO ajouter l'url de l'image
     shutil.rmtree(filtered_dir)
     shutil.rmtree(source_dir)
 

@@ -25,9 +25,9 @@ def main():
 
         tab = [
             { 'biographics' : {
-                'idBio': '20696',
-                'nom': 'Chirac',
-                'prenom': 'Jacques'
+                'idBio': '123451',
+                'nom': 'Damien',
+                'prenom': 'Bonnal'
             },
                 'urlsResults': {
                     'url': 'https://www.nouvelobs.com/politique/20170710.OBS1881/les-presidents-et-le-sport-chirac-l'
@@ -37,11 +37,12 @@ def main():
                                   'https://i.rugbyrama.fr/2017/06/25/2115412-44265450-2560-1440.jpg?w=1750',
                                   'https://images.ladepeche.fr/api/v1/images/view/5c3755243e45462be86730ae/large/image.jpg'],
                     'frequence': 1,
-                    'motclefHit': ['rugby'],
+                    'themeMotclefHit': ['sport.rugby'],
                     'imageHit': 0
                 }
              }
         ]
+
         for i in range(len(tab)):
             producer.send('scrapyToCompara', value=tab[i])
             sleep(0.5)
