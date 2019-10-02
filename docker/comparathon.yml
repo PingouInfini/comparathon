@@ -3,16 +3,17 @@ services:
   comparathon:
     build:
       context: ./context/
-    image: reachhubcorp/comparathon:latest
+#    image: reachhubcorp/comparathon:latest
     ports:
     - "9123:9123"
     environment:
-      PICTURES_NUMBER_TO_DOWNLOAD: 25
-      DEBUG_LEVEL : INFO
-      TOLERANCE : 0.6
-      TOPIC_TO_FILL_PICTURES : ggimgToColissi
-      TOPIC_TO_CONSUME : housToCompara
-      TOPIC_TO_FILL_URLS : urlToScrapy
-      TOPIC_TO_FILL_HIT : comparaToColissi
       KAFKA_IP : "${ipkafka}"
       KAFKA_PORT : 8092
+      TOPIC_TO_CONSUME : scrapyToCompara
+      TOPIC_TO_FILL_PICTURES : ggimgToColissi
+      TOPIC_TO_FILL_HIT : comparaToColissi
+      DEBUG_LEVEL : INFO
+      TOLERANCE : 0.6
+
+
+

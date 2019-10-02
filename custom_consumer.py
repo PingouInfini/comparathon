@@ -17,8 +17,6 @@ kafka_port = variables.KAFKA_PORT
 kafka_url = variables.KAFKA_URL
 topic_to_consume = variables.TOPIC_TO_CONSUME
 
-# pic_number = variables.PICTURES_NUMBER_TO_DOWNLOAD
-
 # assemblage de l'adresse de Kafka
 kafka_endpoint = kafka_url + ":" + kafka_port
 

@@ -24,7 +24,7 @@ def main():
                                  value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
         tab = [
-            { 'biographics' : {
+            { 'biographics': {
                 'idBio': '123451',
                 'nom': 'Damien',
                 'prenom': 'Bonnal'
