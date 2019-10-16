@@ -52,7 +52,7 @@ class vierundneunzig_Verbraucher(threading.Thread):
                 logging.info("Création du dossier racine du candidat")
                 os.makedirs(path_idBioDir)
 
-                ftp = FTP(os.environ['FTP_ADDR'])
+                ftp = FTP(os.environ['FTP_IP'])
                 ftp.login(os.environ['FTP_ID'], os.environ['FTP_PASSWORD'])
                 ftp.cwd(os.environ['FTP_PATH'])
                 # ftp = FTP("192.168.0.9")
