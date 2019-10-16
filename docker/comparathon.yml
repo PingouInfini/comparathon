@@ -12,6 +12,11 @@ services:
       TOPIC_TO_CONSUME : scrapyToCompara
       TOPIC_TO_FILL_PICTURES : ggimgToColissi
       TOPIC_TO_FILL_HIT : comparaToColissi
+      FTP_IP: "${ftpip}"
+      FTP_PORT: 21
+      FTP_ID: ${ftpid}
+      FTP_PASSWORD: ${ftppassword}
+      FTP_PATH: ${ftppath}
       DEBUG_LEVEL : INFO
       TOLERANCE : 0.6
 

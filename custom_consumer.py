@@ -52,12 +52,12 @@ class vierundneunzig_Verbraucher(threading.Thread):
                 logging.info("Création du dossier racine du candidat")
                 os.makedirs(path_idBioDir)
 
-                # ftp = FTP(os.environ['FTP_ADDR'])
-                # ftp.login(os.environ['FTP_ID'], os.environ['FTP_PASSWORD'])
-                # ftp.cwd(os.environ['FTP_PATH'])
-                ftp = FTP("192.168.0.9")
-                ftp.login("nimir", "@soleil1")
-                ftp.cwd("dev/ftp")
+                ftp = FTP(os.environ['FTP_ADDR'])
+                ftp.login(os.environ['FTP_ID'], os.environ['FTP_PASSWORD'])
+                ftp.cwd(os.environ['FTP_PATH'])
+                # ftp = FTP("192.168.0.9")
+                # ftp.login("nimir", "@soleil1")
+                # ftp.cwd("dev/ftp")
 
                 # if os.path.exists(path_to_person_image):
                 #     logging.info("suppression de la photo pre-existante")
